@@ -1,15 +1,60 @@
 {
   "project_info": {
     "project_number": "778502795999",
-    "project_id": "mental-health-calendar-311002",
-    "storage_bucket": "mental-health-calendar-311002.appspot.com"
+    "project_id": "mental-health-calender-311002",
+    "storage_bucket": "mental-health-calender-311002.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:778502795999:android:16b921706e761d988b6f6a",
+        "mobilesdk_app_id": "1:778502795999:android:6400566fbd72c59a8b6f6a",
         "android_client_info": {
           "package_name": "com.example.mental_health_calendar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778502795999-j1smedkl3n8ngp5nja6sdhkac5bab4me.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mental_health_calendar",
+            "certificate_hash": "198d4522cab41abfdbc9728dca86a3c22759fa96"
+          }
+        },
+        {
+          "client_id": "778502795999-nstqdamo5f9pkpuvch2fefjmdr8jnt6j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mental_health_calendar",
+            "certificate_hash": "d9ecda958ef24dab07b184b32294f3b5a1e09aa1"
+          }
+        },
+        {
+          "client_id": "778502795999-tun82mms2nvr5f3hn893phsa4sspptun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoCgDCBxYlkKWKfvBiBIrQtQj6LUDdoZs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778502795999-tun82mms2nvr5f3hn893phsa4sspptun.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778502795999:android:16b921706e761d988b6f6a",
+        "android_client_info": {
+          "package_name": "com.example.mental_health_calender"
         }
       },
       "oauth_client": [
@@ -17,7 +62,7 @@
           "client_id": "778502795999-clo80335i0696bq16fbdubsua0mqunct.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.mental_health_calendar",
+            "package_name": "com.example.mental_health_calender",
             "certificate_hash": "198d4522cab41abfdbc9728dca86a3c22759fa96"
           }
         },
