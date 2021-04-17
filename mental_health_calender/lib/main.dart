@@ -5,7 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'cache_provider.dart';
 import 'firebase.dart';
-import 'pages/welcome.dart';
+import 'pages/login.dart';
 import 'pages/settings.dart';
 
 void main() async {
@@ -34,7 +34,7 @@ class App extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           themeMode: _getTheme(box),
-          home: FirebaseLoader(WelcomePage()),
+          home: FirebaseLoader(LoginPage()),
         );
       },
     );
