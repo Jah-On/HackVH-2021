@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'cache_provider.dart';
-import 'pages/home.dart';
+import 'pages/welcome.dart';
 import 'pages/settings.dart';
 
 void main() async {
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
             themeMode: _getTheme(box),
-            home: HomePage(),
+            home: WelcomePage(),
           );
         });
   }
