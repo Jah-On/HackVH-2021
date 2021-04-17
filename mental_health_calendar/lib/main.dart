@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'cubit/google_cubit.dart';
-import 'cache_provider.dart';
+import 'cubit/settings_cubit.dart';
 import 'pages/login.dart';
-import 'pages/settings.dart';
 
 void main() async {
-  await Settings.init(
-    cacheProvider: HiveCache(SettingsPage.settingsBox),
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: await getApplicationDocumentsDirectory(),
   );
   runApp(App());
 }
@@ -20,11 +22,13 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GoogleCubit(),
-      child: ValueListenableBuilder(
-        valueListenable: Hive.box(SettingsPage.settingsBox).listenable(),
-        builder: (context, box, widget) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => GoogleCubit()),
+        BlocProvider(create: (context) => SettingsCubit()),
+      ],
+      child: BlocBuilder<SettingsCubit, SettingsState>(
+        builder: (context, state) {
           return MaterialApp(
             theme: ThemeData(
               brightness: Brightness.light,
@@ -36,7 +40,7 @@ class App extends StatelessWidget {
               primarySwatch: Colors.green,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            themeMode: _getTheme(box),
+            themeMode: _getTheme(state),
             home: LoginPage(),
           );
         },
@@ -44,15 +48,11 @@ class App extends StatelessWidget {
     );
   }
 
-  ThemeMode _getTheme(Box box) {
-    final value = box.get(SettingsPage.themeKey);
-    final theme = {
-          "dark": ThemeMode.dark,
-          "light": ThemeMode.light,
-          "system": ThemeMode.system,
-        }[value] ??
-        ThemeMode.system;
-
-    return theme;
-  }
+  ThemeMode _getTheme(SettingsState state) =>
+      {
+        "dark": ThemeMode.dark,
+        "light": ThemeMode.light,
+        "system": ThemeMode.system,
+      }[state.themeMode] ??
+      ThemeMode.system;
 }
