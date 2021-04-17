@@ -1,4 +1,4 @@
-part of 'calendar_cubit.dart';
+part of 'google_cubit.dart';
 
 @immutable
 abstract class GoogleState {}
@@ -35,7 +35,14 @@ class GoogleCalendarLoading extends GoogleAuthenticated {
 }
 
 class GoogleCalendarLoaded extends GoogleAuthenticated {
-  // TODO: Calendar Data
+  final List<Event> events;
+  final DateTime todayStart;
+  final DateTime todayEnd;
 
-  GoogleCalendarLoaded(GoogleAuthenticated auth) : super.copy(auth);
+  GoogleCalendarLoaded(
+    GoogleAuthenticated auth, {
+    @required this.events,
+    @required this.todayStart,
+    @required this.todayEnd,
+  }) : super.copy(auth);
 }

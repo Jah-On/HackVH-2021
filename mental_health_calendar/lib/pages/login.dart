@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mental_health_calendar/cubit/calendar_cubit.dart';
+import 'package:mental_health_calendar/cubit/google_cubit.dart';
 
 import 'home.dart';
 

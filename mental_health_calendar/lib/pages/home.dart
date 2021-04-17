@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:mental_health_calendar/components/calendar_event_list.dart';
+import 'package:mental_health_calendar/cubit/google_cubit.dart';
 
 import 'settings.dart';
 
@@ -28,12 +31,28 @@ class HomePage extends StatelessWidget {
         onPressed: () {},
         child: Icon(Icons.add),
       ),
-      body: ListView.builder(
-        itemCount: 4,
-        itemBuilder: (context, index) => Card(
-          child: ListTile(
-            title: Text("School"),
-            subtitle: Text("8:15 AM - 3:35 PM"),
+      body: BlocBuilder<GoogleCubit, GoogleState>(
+        builder: (context, state) => RefreshIndicator(
+          // onRefresh: (state is GoogleAuthenticated &&
+          //         !(state is GoogleCalendarLoading))
+          //     ? BlocProvider.of<GoogleCubit>(context).loadCalendar
+          //     : () => Future.delayed(Duration(seconds: 5)),
+          onRefresh: BlocProvider.of<GoogleCubit>(context).loadCalendar,
+          child: ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              if (state is GoogleAuthenticated) ...[
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    "Welcome, ${state.googleUser.displayName}",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
+              ],
+              CalendarEventList(),
+            ],
           ),
         ),
       ),

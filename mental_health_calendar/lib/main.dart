@@ -4,7 +4,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'cubit/calendar_cubit.dart';
+import 'cubit/google_cubit.dart';
 import 'cache_provider.dart';
 import 'pages/login.dart';
 import 'pages/settings.dart';

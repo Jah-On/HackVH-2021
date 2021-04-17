@@ -6,7 +6,7 @@ import 'package:googleapis/calendar/v3.dart';
 import "package:http/http.dart";
 import 'package:meta/meta.dart';
 
-part 'calendar_state.dart';
+part 'google_state.dart';
 
 class _AuthClient extends BaseClient {
   final _client = Client();
@@ -26,9 +26,8 @@ class _AuthClient extends BaseClient {
 
 class GoogleCubit extends Cubit<GoogleState> {
   final Future<FirebaseApp> _firebaseInitialization = Firebase.initializeApp();
-  final googleSignIn = GoogleSignIn(scopes: [
-    CalendarApi.calendarReadonlyScope
-  ]);
+  final googleSignIn =
+      GoogleSignIn(scopes: [CalendarApi.calendarReadonlyScope]);
 
   Map<String, String> _headers;
   _AuthClient _client;
@@ -40,7 +39,7 @@ class GoogleCubit extends Cubit<GoogleState> {
     login();
   }
 
-  void login() async {
+  Future<void> login() async {
     if (state is GoogleUnauthenticated) {
       emit(GoogleLoading());
 
@@ -88,7 +87,7 @@ class GoogleCubit extends Cubit<GoogleState> {
     }
   }
 
-  void loadCalendar() async {
+  Future<void> loadCalendar() async {
     if (state is GoogleAuthenticated && !(state is GoogleCalendarLoading)) {
       GoogleAuthenticated _state = state;
       try {
@@ -96,9 +95,35 @@ class GoogleCubit extends Cubit<GoogleState> {
 
         final calendars = await _calendarApi.calendarList.list();
 
-        final events = await Future.wait(calendars.items.map((calendar) => _calendarApi.events.list(calendar.id)));
+        final now = DateTime.now();
+        final todayStart = now
+            .subtract(Duration(
+              hours: now.hour,
+              minutes: now.minute,
+              seconds: now.second,
+              milliseconds: now.millisecond,
+              microseconds: now.microsecond,
+            ))
+            .toUtc();
+        final todayEnd = todayStart.add(Duration(days: 1));
 
-        emit(GoogleCalendarLoaded(_state));
+        final eventLists = await Future.wait(calendars.items.map(
+          (calendar) => _calendarApi.events.list(
+            calendar.id,
+            timeMin: todayStart,
+            timeMax: todayEnd,
+            singleEvents: true,
+          ),
+        ));
+        final events =
+            eventLists.expand((eventList) => eventList.items).toList();
+
+        emit(GoogleCalendarLoaded(
+          _state,
+          todayStart: todayStart,
+          todayEnd: todayEnd,
+          events: events,
+        ));
       } catch (e) {
         print(e);
         emit(GoogleAuthenticated.copy(_state));
