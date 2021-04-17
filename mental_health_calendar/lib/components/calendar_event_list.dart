@@ -42,12 +42,15 @@ class _EventTile extends StatelessWidget {
     if (event.start.date != null) {
       subtitle = "All Day";
     } else {
-      final start = event.start.dateTime.isBefore(state.todayStart)
-          ? dateTimeFormat.format(event.start.dateTime)
-          : timeFormat.format(event.start.dateTime);
-      final end = event.end.dateTime.isAfter(state.todayEnd)
-          ? dateTimeFormat.format(event.end.dateTime)
-          : timeFormat.format(event.end.dateTime);
+      final startTime = event.start.dateTime.toLocal();
+      final endTime = event.end.dateTime.toLocal();
+
+      final start = startTime.isBefore(state.todayStart)
+          ? dateTimeFormat.format(startTime)
+          : timeFormat.format(startTime);
+      final end = endTime.isAfter(state.todayEnd)
+          ? dateTimeFormat.format(endTime)
+          : timeFormat.format(endTime);
       subtitle = "$start - $end";
     }
 
