@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'cache_provider.dart';
+import 'firebase.dart';
 import 'pages/welcome.dart';
 import 'pages/settings.dart';
 
@@ -11,31 +12,32 @@ void main() async {
   await Settings.init(
     cacheProvider: HiveCache(SettingsPage.settingsBox),
   );
-  runApp(MyApp());
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: Hive.box(SettingsPage.settingsBox).listenable(),
-        builder: (context, box, widget) {
-          return MaterialApp(
-            theme: ThemeData(
-              brightness: Brightness.light,
-              primarySwatch: Colors.green,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            ),
-            darkTheme: ThemeData(
-              brightness: Brightness.dark,
-              primarySwatch: Colors.green,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            ),
-            themeMode: _getTheme(box),
-            home: WelcomePage(),
-          );
-        });
+      valueListenable: Hive.box(SettingsPage.settingsBox).listenable(),
+      builder: (context, box, widget) {
+        return MaterialApp(
+          theme: ThemeData(
+            brightness: Brightness.light,
+            primarySwatch: Colors.green,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            primarySwatch: Colors.green,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          themeMode: _getTheme(box),
+          home: FirebaseLoader(WelcomePage()),
+        );
+      },
+    );
   }
 
   ThemeMode _getTheme(Box box) {
