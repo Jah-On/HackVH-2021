@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mental_health_calendar/components/calendar_event_list.dart';
 import 'package:mental_health_calendar/cubit/google_cubit.dart';
+import 'package:mental_health_calendar/pages/questionare.dart';
 
 import 'settings.dart';
 
@@ -28,7 +29,16 @@ class HomePage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          // TODO: Have a proper way to open the questionare
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuestionarePage(),
+              maintainState: false,
+            ),
+          );
+        },
         child: Icon(Icons.add),
       ),
       body: BlocBuilder<GoogleCubit, GoogleState>(

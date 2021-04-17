@@ -82,6 +82,8 @@ class GoogleCubit extends Cubit<GoogleState> {
 
         loadCalendar();
       } catch (e) {
+        googleSignIn.signOut();
+        FirebaseAuth.instance.signOut();
         emit(GoogleUnauthenticated(error: e));
       }
     }
