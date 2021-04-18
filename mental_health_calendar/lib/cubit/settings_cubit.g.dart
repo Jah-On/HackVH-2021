@@ -34,6 +34,10 @@ SettingsState _$SettingsStateFromJson(Map<String, dynamic> json) {
     exercise: json['exercise'] == null
         ? null
         : MentalHealthEvent.fromJson(json['exercise'] as Map<String, dynamic>),
+    meditation: json['meditation'] == null
+        ? null
+        : MentalHealthEvent.fromJson(
+            json['meditation'] as Map<String, dynamic>),
   );
 }
 
@@ -42,4 +46,5 @@ Map<String, dynamic> _$SettingsStateToJson(SettingsState instance) =>
       'themeMode': instance.themeMode,
       'checkIn': instance.checkIn,
       'exercise': instance.exercise,
+      'meditation': instance.meditation,
     };

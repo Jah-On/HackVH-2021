@@ -82,10 +82,17 @@ class SettingsState {
     icon: Icons.directions_run,
   );
 
+  final MentalHealthEvent meditation;
+  static final MentalHealthEventInfo meditationInfo = MentalHealthEventInfo(
+    name: "Meditation",
+    icon: Icons.self_improvement,
+  );
+
   SettingsState({
     String themeMode,
     MentalHealthEvent checkIn,
     MentalHealthEvent exercise,
+    MentalHealthEvent meditation,
   })  : themeMode = themeMode ?? "system",
         checkIn = checkIn ??
             MentalHealthEvent(
@@ -98,17 +105,25 @@ class SettingsState {
               days: [false, true, false, true, false, true, false],
               startTime: Duration(hours: 17),
               endTime: Duration(hours: 17, minutes: 30),
+            ),
+        meditation = meditation ??
+            MentalHealthEvent(
+              days: [false, true, false, true, false, true, false],
+              startTime: Duration(hours: 7, minutes: 30),
+              endTime: Duration(hours: 7, minutes: 45),
             );
 
   SettingsState copyWith({
     String themeMode,
     MentalHealthEvent checkIn,
     MentalHealthEvent exercise,
+    MentalHealthEvent meditation,
   }) {
     return SettingsState(
       themeMode: themeMode ?? this.themeMode,
       checkIn: checkIn ?? this.checkIn,
       exercise: exercise ?? this.exercise,
+      meditation: meditation ?? this.meditation,
     );
   }
 

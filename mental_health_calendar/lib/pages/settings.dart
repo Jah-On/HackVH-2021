@@ -85,6 +85,13 @@ class SettingsPage extends StatelessWidget {
               onChange: (value) => BlocProvider.of<SettingsCubit>(context)
                   .emit(state.copyWith(exercise: value)),
             ),
+            Divider(),
+            HealthEventSettings(
+              event: state.meditation,
+              info: SettingsState.meditationInfo,
+              onChange: (value) => BlocProvider.of<SettingsCubit>(context)
+                  .emit(state.copyWith(meditation: value)),
+            ),
           ],
         ),
       ),

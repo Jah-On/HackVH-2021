@@ -48,6 +48,11 @@ class CalendarEventList extends StatelessWidget {
       SettingsState.exerciseInfo,
     ));
 
+    allEvents.add(_Event.fromMentalHealthEvent(
+      settings.meditation,
+      SettingsState.meditationInfo,
+    ));
+
     allEvents.removeWhere((e) => e == null);
 
     allEvents.sort((a, b) {
@@ -107,7 +112,7 @@ class _Event {
         icon: info.icon,
         action: info.action == null
             ? null
-            : (context) => OutlinedButton(
+            : (context) => ElevatedButton(
                   child: Text("Do it"),
                   onPressed: () => info.action(context),
                 ),
