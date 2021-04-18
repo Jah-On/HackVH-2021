@@ -125,10 +125,16 @@ class HealthEventSettings extends StatelessWidget {
             TimeEditor(
               label: "Starts at",
               value: event.startTime,
+              onChange: (value){
+                onChange(event.copyWith(startTime: value));
+              },
             ),
             TimeEditor(
               label: "Ends at",
               value: event.endTime,
+              onChange: (value){
+                onChange(event.copyWith(endTime: value));
+              },
             )
           ],
         ),

@@ -15,7 +15,11 @@ class MentalHealthEvent {
   final Duration startTime;
   final Duration endTime;
 
-  MentalHealthEvent({this.days, this.startTime, this.endTime}) {
+  MentalHealthEvent({this.days, this.startTime, endTime})
+      : endTime = startTime.compareTo(endTime) > 0
+            ? startTime
+            : endTime // Prevent end being before start
+  {
     assert(days.length == 7);
   }
 

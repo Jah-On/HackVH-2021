@@ -12,9 +12,7 @@ MentalHealthEvent _$MentalHealthEventFromJson(Map<String, dynamic> json) {
     startTime: json['startTime'] == null
         ? null
         : Duration(microseconds: json['startTime'] as int),
-    endTime: json['endTime'] == null
-        ? null
-        : Duration(microseconds: json['endTime'] as int),
+    endTime: json['endTime'],
   );
 }
 
