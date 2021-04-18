@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mental_health_calendar/components/settings.dart';
+import 'package:mental_health_calendar/cubit/google_cubit.dart';
 import 'package:mental_health_calendar/cubit/settings_cubit.dart';
+import 'package:mental_health_calendar/pages/login.dart';
 
 class SettingsPage extends StatelessWidget {
   static final settingsBox = "settings";
@@ -14,7 +16,10 @@ class SettingsPage extends StatelessWidget {
       body: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) => ListView(
           children: <Widget>[
-            ListTile(title: Text("SYSTEM", style: _groupStyle(context))),
+            ListTile(
+              title: Text("SYSTEM", style: _groupStyle(context)),
+              dense: true,
+            ),
             ListTile(
               title: Text("Theme"),
               trailing: DropdownButton(
@@ -34,12 +39,50 @@ class SettingsPage extends StatelessWidget {
                 },
               ),
             ),
-            ListTile(title: Text("SCHEDULING", style: _groupStyle(context))),
+            BlocBuilder<GoogleCubit, GoogleState>(
+              builder: (context, state) {
+                if (state is GoogleAuthenticated) {
+                  return ListTile(
+                    title: Text("Signed in as ${state.googleUser.displayName}"),
+                    subtitle: Text("(${state.googleUser.email})"),
+                    trailing: OutlinedButton(
+                      child: Text("Sign Out"),
+                      onPressed: () {
+                        BlocProvider.of<GoogleCubit>(context).signOut();
+                        while (Navigator.canPop(context)) {
+                          Navigator.pop(context);
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+            Divider(thickness: 1.5),
+            ListTile(
+              title: Text("SCHEDULING", style: _groupStyle(context)),
+              dense: true,
+            ),
+            Divider(),
             HealthEventSettings(
-                name: "Mental Health Check-In",
-                state: state.checkIn,
-                onChange: (value) => BlocProvider.of<SettingsCubit>(context)
-                    .emit(state.copyWith(checkIn: value))),
+              event: state.checkIn,
+              info: SettingsState.checkInInfo,
+              onChange: (value) => BlocProvider.of<SettingsCubit>(context)
+                  .emit(state.copyWith(checkIn: value)),
+            ),
+            Divider(),
+            HealthEventSettings(
+              event: state.exercise,
+              info: SettingsState.exerciseInfo,
+              onChange: (value) => BlocProvider.of<SettingsCubit>(context)
+                  .emit(state.copyWith(exercise: value)),
+            ),
           ],
         ),
       ),

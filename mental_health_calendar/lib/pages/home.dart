@@ -28,19 +28,6 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Have a proper way to open the questionare
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QuestionarePage(),
-              maintainState: false,
-            ),
-          );
-        },
-        child: Icon(Icons.add),
-      ),
       body: BlocBuilder<GoogleCubit, GoogleState>(
         builder: (context, state) => RefreshIndicator(
           // onRefresh: (state is GoogleAuthenticated &&

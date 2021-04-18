@@ -22,10 +22,6 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocBuilder<GoogleCubit, GoogleState>(
         builder: (context, state) {
           if (state is GoogleUnauthenticated) {
-            if (state.error != null) {
-              print(state.error);
-            }
-
             return Center(
               child: ElevatedButton(
                 onPressed: BlocProvider.of<GoogleCubit>(context).login,

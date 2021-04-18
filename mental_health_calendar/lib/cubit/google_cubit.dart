@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/calendar/v3.dart';
 import "package:http/http.dart";
+import 'package:mental_health_calendar/util.dart';
 import 'package:meta/meta.dart';
 
 part 'google_state.dart';
@@ -82,11 +83,17 @@ class GoogleCubit extends Cubit<GoogleState> {
 
         loadCalendar();
       } catch (e) {
-        googleSignIn.signOut();
-        FirebaseAuth.instance.signOut();
-        emit(GoogleUnauthenticated(error: e));
+        print(e);
+        signOut();
       }
     }
+  }
+
+  Future<void> signOut() async {
+    emit(GoogleLoading());
+    await googleSignIn.signOut();
+    await FirebaseAuth.instance.signOut();
+    emit(GoogleUnauthenticated());
   }
 
   Future<void> loadCalendar() async {
@@ -98,22 +105,14 @@ class GoogleCubit extends Cubit<GoogleState> {
         final calendars = await _calendarApi.calendarList.list();
 
         final now = DateTime.now();
-        final todayStart = now
-            .subtract(Duration(
-              hours: now.hour,
-              minutes: now.minute,
-              seconds: now.second,
-              milliseconds: now.millisecond,
-              microseconds: now.microsecond,
-            ))
-            .toUtc();
-        final todayEnd = todayStart.add(Duration(days: 1));
+        final todayStartDate = Util.todayStart(now);
+        final todayEndDate = Util.todayEnd(now);
 
         final eventLists = await Future.wait(calendars.items.map(
           (calendar) => _calendarApi.events.list(
             calendar.id,
-            timeMin: todayStart,
-            timeMax: todayEnd,
+            timeMin: todayStartDate.toUtc(),
+            timeMax: todayEndDate.toUtc(),
             singleEvents: true,
           ),
         ));
@@ -122,8 +121,6 @@ class GoogleCubit extends Cubit<GoogleState> {
 
         emit(GoogleCalendarLoaded(
           _state,
-          todayStart: todayStart,
-          todayEnd: todayEnd,
           events: events,
         ));
       } catch (e) {

@@ -6,19 +6,23 @@ part of 'settings_cubit.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-HealthEventState _$HealthEventStateFromJson(Map<String, dynamic> json) {
-  return HealthEventState(
+MentalHealthEvent _$MentalHealthEventFromJson(Map<String, dynamic> json) {
+  return MentalHealthEvent(
     days: (json['days'] as List)?.map((e) => e as bool)?.toList(),
-    duration: json['duration'] == null
+    startTime: json['startTime'] == null
         ? null
-        : Duration(microseconds: json['duration'] as int),
+        : Duration(microseconds: json['startTime'] as int),
+    endTime: json['endTime'] == null
+        ? null
+        : Duration(microseconds: json['endTime'] as int),
   );
 }
 
-Map<String, dynamic> _$HealthEventStateToJson(HealthEventState instance) =>
+Map<String, dynamic> _$MentalHealthEventToJson(MentalHealthEvent instance) =>
     <String, dynamic>{
       'days': instance.days,
-      'duration': instance.duration?.inMicroseconds,
+      'startTime': instance.startTime?.inMicroseconds,
+      'endTime': instance.endTime?.inMicroseconds,
     };
 
 SettingsState _$SettingsStateFromJson(Map<String, dynamic> json) {
@@ -26,7 +30,10 @@ SettingsState _$SettingsStateFromJson(Map<String, dynamic> json) {
     themeMode: json['themeMode'] as String ?? 'system',
     checkIn: json['checkIn'] == null
         ? null
-        : HealthEventState.fromJson(json['checkIn'] as Map<String, dynamic>),
+        : MentalHealthEvent.fromJson(json['checkIn'] as Map<String, dynamic>),
+    exercise: json['exercise'] == null
+        ? null
+        : MentalHealthEvent.fromJson(json['exercise'] as Map<String, dynamic>),
   );
 }
 
@@ -34,4 +41,5 @@ Map<String, dynamic> _$SettingsStateToJson(SettingsState instance) =>
     <String, dynamic>{
       'themeMode': instance.themeMode,
       'checkIn': instance.checkIn,
+      'exercise': instance.exercise,
     };

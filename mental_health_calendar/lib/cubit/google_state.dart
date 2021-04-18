@@ -5,11 +5,7 @@ abstract class GoogleState {}
 
 class GoogleLoading extends GoogleState {}
 
-class GoogleUnauthenticated extends GoogleState {
-  final dynamic error;
-
-  GoogleUnauthenticated({this.error});
-}
+class GoogleUnauthenticated extends GoogleState {}
 
 class GoogleAuthenticated extends GoogleState {
   final GoogleAuthCredential googleCredential;
@@ -36,13 +32,9 @@ class GoogleCalendarLoading extends GoogleAuthenticated {
 
 class GoogleCalendarLoaded extends GoogleAuthenticated {
   final List<Event> events;
-  final DateTime todayStart;
-  final DateTime todayEnd;
 
   GoogleCalendarLoaded(
     GoogleAuthenticated auth, {
     @required this.events,
-    @required this.todayStart,
-    @required this.todayEnd,
   }) : super.copy(auth);
 }

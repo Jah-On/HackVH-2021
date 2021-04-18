@@ -4,30 +4,52 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mental_health_calendar/pages/questionare.dart';
 
 part 'settings_cubit.g.dart';
 
 @immutable
 @JsonSerializable()
-class HealthEventState {
+class MentalHealthEvent {
   final List<bool> days;
-  final Duration duration;
+  final Duration startTime;
+  final Duration endTime;
 
-  const HealthEventState({this.days, this.duration});
+  MentalHealthEvent({this.days, this.startTime, this.endTime}) {
+    assert(days.length == 7);
+  }
 
-  HealthEventState copyWith({
+  MentalHealthEvent copyWith({
     List<bool> days,
-    Duration duration,
+    Duration startTime,
+    Duration endTime,
   }) {
-    return HealthEventState(
+    return MentalHealthEvent(
       days: days ?? this.days,
-      duration: duration ?? this.duration,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
     );
   }
 
-  factory HealthEventState.fromJson(Map<String, dynamic> json) =>
-      _$HealthEventStateFromJson(json);
-  Map<String, dynamic> toJson() => _$HealthEventStateToJson(this);
+  factory MentalHealthEvent.fromJson(Map<String, dynamic> json) =>
+      _$MentalHealthEventFromJson(json);
+  Map<String, dynamic> toJson() => _$MentalHealthEventToJson(this);
+
+  bool occursToday() {
+    // Monady is 1
+    // Sunay is 7%7 = 0
+    final weekday = DateTime.now().weekday;
+    return days[weekday % 7];
+  }
+}
+
+@immutable
+class MentalHealthEventInfo {
+  final String name;
+  final IconData icon;
+  final void Function(BuildContext) action;
+
+  MentalHealthEventInfo({this.name, this.icon, this.action});
 }
 
 @immutable
@@ -36,17 +58,53 @@ class SettingsState {
   @JsonKey(defaultValue: "system")
   final String themeMode;
 
-  final HealthEventState checkIn;
+  final MentalHealthEvent checkIn;
+  static final MentalHealthEventInfo checkInInfo = MentalHealthEventInfo(
+      name: "Mental Health Check",
+      icon: Icons.alarm_on,
+      action: (context) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuestionarePage(),
+            maintainState: false,
+          ),
+        );
+      });
 
-  const SettingsState({this.themeMode, this.checkIn});
+  final MentalHealthEvent exercise;
+  static final MentalHealthEventInfo exerciseInfo = MentalHealthEventInfo(
+    name: "Exercise",
+    icon: Icons.directions_run,
+  );
+
+  SettingsState({
+    String themeMode,
+    MentalHealthEvent checkIn,
+    MentalHealthEvent exercise,
+  })  : themeMode = themeMode ?? "system",
+        checkIn = checkIn ??
+            MentalHealthEvent(
+              days: [false, false, false, false, false, false, true],
+              startTime: Duration(hours: 19),
+              endTime: Duration(hours: 19, minutes: 10),
+            ),
+        exercise = exercise ??
+            MentalHealthEvent(
+              days: [false, true, false, true, false, true, false],
+              startTime: Duration(hours: 17),
+              endTime: Duration(hours: 17, minutes: 30),
+            );
 
   SettingsState copyWith({
     String themeMode,
-    HealthEventState checkIn,
+    MentalHealthEvent checkIn,
+    MentalHealthEvent exercise,
   }) {
     return SettingsState(
       themeMode: themeMode ?? this.themeMode,
       checkIn: checkIn ?? this.checkIn,
+      exercise: exercise ?? this.exercise,
     );
   }
 
@@ -60,24 +118,8 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
   SettingsCubit() : super(SettingsState());
 
   @override
-  SettingsState fromJson(Map<String, dynamic> json) {
-    SettingsState state = SettingsState.fromJson(json);
-    if (state.checkIn == null) {
-      state = state.copyWith(
-        checkIn: HealthEventState(
-          days: [false, false, false, false, false, false, true],
-          duration: Duration(minutes: 10),
-        ),
-      );
-    }
-    return state;
-  }
-
-  @override
-  void onChange(Change<SettingsState> change) {
-    super.onChange(change);
-    print("State changed: ${jsonEncode(state.toJson())}");
-  }
+  SettingsState fromJson(Map<String, dynamic> json) =>
+      SettingsState.fromJson(json);
 
   @override
   Map<String, dynamic> toJson(SettingsState state) => state.toJson();
