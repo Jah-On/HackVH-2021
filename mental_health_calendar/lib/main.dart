@@ -30,6 +30,7 @@ class App extends StatelessWidget {
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               brightness: Brightness.light,
               primarySwatch: Colors.green,
