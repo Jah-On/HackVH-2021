@@ -12,7 +12,9 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Settings"),
+      ),
       body: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) => ListView(
           children: <Widget>[
